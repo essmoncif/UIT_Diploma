@@ -80,7 +80,90 @@ contract("Uit", (accounts) => {
         } catch (error) {
             assert.fail(error);
         }
-        
+    })
 
+    it("Get diploma from Blockchain", async ()=> {
+        uitInstance = await Uit.deployed();
+        const diploma = {
+            title: "software engineering for cloud computing",
+            university: "Ibn Tofail",
+            student: student,
+            dean: deanAddress,
+            montion: 2
+        }
+        const metadata = JSON.stringify(diploma);
+        const hash = _web3.utils.sha3(metadata);
+        const signature = await _web3.eth.sign(hash, deanAddress);
+        var result;
+        try {
+            result = await uitInstance.registerDiploma(diploma.title, diploma.university, diploma.student, diploma.montion, hash, signature, {from: deanAddress});
+            assert.notEqual(result, "0x0", "New diploma contract address must be not null");
+        } catch (error) {
+            assert.fail(error);
+        }
+
+        try {
+            const receipt = await uitInstance.getDiplomaOfStudent(result.logs[0].args._student ,result.logs[0].args._diploma, {from: deanAddress});
+            assert.equal(receipt.dipoma, result.logs[0].args._diploma);
+            assert.equal(receipt.signOfDean, signature);
+        } catch (error) {
+            assert.fail(error);
+        }
+
+        try {
+            const receipt = await uitInstance.getDiploma(result.logs[0].args._diploma, {from: deanAddress});
+            assert.equal(receipt._student.first_name, "anass");
+            assert.equal(receipt._student.last_name, "azour");
+            const birthday = new Date(1997, 7, 7);
+            assert.equal(receipt._student.birthday, birthday.getTime());
+            assert.equal(receipt._title, "software engineering for cloud computing");
+            assert.equal(receipt._university, "Ibn Tofail");
+            assert.equal(receipt._hash, hash);
+        } catch (error) {
+            assert.fail(error);
+        }
+
+    })
+
+    it("Requirements of getting diploma", async () => {
+        uitInstance = await Uit.deployed();
+        const diploma = {
+            title: "software engineering for cloud computing",
+            university: "Ibn Tofail",
+            student: student,
+            dean: deanAddress,
+            montion: 2
+        }
+        const metadata = JSON.stringify(diploma);
+        const hash = _web3.utils.sha3(metadata);
+        const signature = await _web3.eth.sign(hash, deanAddress);
+        var result;
+        try {
+            result = await uitInstance.registerDiploma(diploma.title, diploma.university, diploma.student, diploma.montion, hash, signature, {from: deanAddress});
+            assert.notEqual(result, "0x0", "New diploma contract address must be not null");
+        } catch (error) {
+            assert.fail(error);
+        }
+
+        try {
+            const receipt = await uitInstance.getDiploma("0x0", {from: deanAddress});
+        } catch (error) {
+            assert.equal(error.reason, 'invalid address');
+            assert.equal(error.arg, "_diploma");
+        }
+
+        try {
+            const receipt = await uitInstance.getDiplomaOfStudent(student, "0x0");
+        } catch (error) {
+            assert.equal(error.reason, 'invalid address');
+            assert.equal(error.arg, "_diploma");
+        }
+
+        try {
+            const receipt = await uitInstance.getDiplomaOfStudent("0x0", "0x0");
+        } catch (error) {
+            assert.equal(error.reason, "invalid address");
+            assert.equal(error.arg, '_student');
+        }
     })
 })
