@@ -1,0 +1,21 @@
+{
+  "name": "uitdiploma",
+  "version": "1.0.0",
+  "description": "trusted diploma for ibn tofail university",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "keywords": [
+    "trusted",
+    "diploma"
+  ],
+  "author": "moncif essaoudi",
+  "license": "MIT",
+  "dependencies": {
+    "web3": "^1.3.0"
+  }
+}
