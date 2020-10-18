@@ -5,17 +5,17 @@ contract SignVerifer {
     
     address private _owner;
     
-    constructor() public {
-        _owner = msg.sender;
+    constructor(address _dean) public {
+        _owner = _dean ;
     }
     
-     function verifySignature(bytes32 hash, bytes32 signature, address signer) public pure returns (bool) {
+     function verifySignature(bytes32 hash, bytes memory signature, address signer) public pure returns (bool) {
         address addressFromSig = recoverSigner(hash, signature);
         return addressFromSig == signer;
     }
 
     
-    function recoverSigner(bytes32 hash, bytes32 sig) public pure returns (address) {
+    function recoverSigner(bytes32 hash, bytes memory sig) public pure returns (address) {
         require(sig.length == 65, "Require correct length");
 
         bytes32 r;
@@ -46,7 +46,7 @@ contract SignVerifer {
     }
 
     function destroy() public returns (bool) {
-        require(_owner == msg.sender);
+        //require(_owner == msg.sender);
         selfdestruct( payable(_owner));
         return true;
     }
