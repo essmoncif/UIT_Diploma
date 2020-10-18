@@ -71,6 +71,22 @@ contract Uit {
     }
     
     
+    function getDiploma(address _diploma) public validAddress(_diploma) view returns(Student memory _student, string memory _title, string memory _university, uint256 _date, Mention _mention, bytes32 _hash, bytes memory _signature){
+        require(address(_diplomas[_diploma]) != address(0));
+        Diploma diploma = _diplomas[_diploma];
+        _student = _students[diploma.getStudent()];
+        _title = diploma.getTitle();
+        _university = diploma.getUniversity();
+        _date = diploma.getDate();
+        _mention = diploma.getMention();
+        _hash = diploma.fingerPrint();
+        require(_dips[diploma.getStudent()][_diploma].signOfDean.length != 0);
+        _signature = _dips[diploma.getStudent()][_diploma].signOfDean;
+    }
     
+    function getDiplomaOfStudent(address _student, address _diploma) public view returns(SignDiploma memory){
+        require(address(_dips[_student][_diploma].dipoma) == _diploma);
+        return _dips[_student][_diploma];
+    }
     
 }
