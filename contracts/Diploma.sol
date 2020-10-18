@@ -30,13 +30,30 @@ contract Diploma {
         _hash = hash;
     }
     
-    function getDate() public view returns(uint256){
+     function getDate() public view returns(uint256){
         return _date;
     }
     
     function fingerPrint() public view returns (bytes32) {
         return _hash;
     }
+    
+    function getStudent() public view returns(address) {
+        return _student;
+    }
+    
+    function getTitle() public view returns(string memory){
+        return _title;
+    }
+    
+    function getUniversity() public view returns(string memory) {
+        return _university;
+    }
+    
+    function getMention() public view returns(Mention) {
+        return _montion;
+    }
+    
     
 }
 
