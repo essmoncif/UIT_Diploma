@@ -20,7 +20,7 @@ contract Uit {
     
     struct SignDiploma {
         Diploma dipoma;
-        bytes32 signOfDean;
+        bytes signOfDean;
     }
     mapping(address => Student) private _students;
     mapping(address => Diploma) private _diplomas;
@@ -60,8 +60,8 @@ contract Uit {
         return _students[his_address];
     }
     
-    function registerDiploma(string memory title, string memory university, address student,  Mention montion, bytes32 hash, bytes32 signature) public onlyOwner validAddress(student) returns(address) {
-        SignVerifer sign = new SignVerifer();
+    function registerDiploma(string memory title, string memory university, address student,  Mention montion, bytes32 hash, bytes memory signature) public onlyOwner validAddress(student) returns(address) {
+        SignVerifer sign = new SignVerifer(_owner);
         require(sign.verifySignature(hash, signature, _owner) == true);
         Diploma diploma = new Diploma(title, university, student, _owner, montion, hash);
         _diplomas[address(diploma)] = diploma;
