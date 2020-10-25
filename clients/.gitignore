@@ -11,6 +11,9 @@
 # production
 /build
 
+# ABI of smart contracts
+/src/ABI
+
 # misc
 .DS_Store
 .env.local

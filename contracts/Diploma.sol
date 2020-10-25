@@ -1,26 +1,19 @@
 pragma solidity ^0.6.1;
 
-enum Mention {
-    passable,
-    assez_bien,
-    bien,
-    tres_bien
-}
-
 contract Diploma {
     
     
     
     string private _title;
     string private _university;
-    Mention private _montion;
+    string private _montion;
     uint256 private _date;
     address private _student;
     address private _dean;
     bytes32 private _hash;
     
     
-    constructor(string memory title, string memory university, address student, address dean, Mention montion, bytes32 hash) public {
+    constructor(string memory title, string memory university, address student, address dean, string memory montion, bytes32 hash) public {
         _title = title;
         _university = university;
         _student = student;
@@ -50,7 +43,7 @@ contract Diploma {
         return _university;
     }
     
-    function getMention() public view returns(Mention) {
+    function getMention() public view returns(string memory) {
         return _montion;
     }
     

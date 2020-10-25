@@ -16,6 +16,7 @@ contract Uit {
     struct Dean {
         string first_name;
         string last_name;
+        address dean_address;
     }
     
     struct SignDiploma {
@@ -35,6 +36,7 @@ contract Uit {
         _owner = msg.sender;
         _dean.first_name = _dean_first_name;
         _dean.last_name = _dean_last_name;
+        _dean.dean_address = msg.sender;
     }
     
     function getDean() public view returns(Dean memory) {
@@ -60,18 +62,15 @@ contract Uit {
         return _students[his_address];
     }
     
-    function registerDiploma(string memory title, string memory university, address student,  Mention montion, bytes32 hash, bytes memory signature) public onlyOwner validAddress(student) returns(address) {
-        SignVerifer sign = new SignVerifer(_owner);
-        require(sign.verifySignature(hash, signature, _owner) == true);
+    function registerDiploma(string memory title, string memory university, address student, string memory montion, bytes32 hash, bytes memory signature) public onlyOwner validAddress(student)  {
         Diploma diploma = new Diploma(title, university, student, _owner, montion, hash);
         _diplomas[address(diploma)] = diploma;
         _dips[student][address(diploma)] = SignDiploma(diploma, signature);
         emit Graduate(student, address(diploma));
-        return address(diploma);
     }
     
     
-    function getDiploma(address _diploma) public validAddress(_diploma) view returns(Student memory _student, string memory _title, string memory _university, uint256 _date, Mention _mention, bytes32 _hash, bytes memory _signature){
+    function getDiploma(address _diploma) public validAddress(_diploma) view returns(Student memory _student, string memory _title, string memory _university, uint256 _date, string memory _mention, bytes32 _hash, bytes memory _signature){
         require(address(_diplomas[_diploma]) != address(0));
         Diploma diploma = _diplomas[_diploma];
         _student = _students[diploma.getStudent()];

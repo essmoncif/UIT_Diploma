@@ -59,7 +59,7 @@ contract("Uit", (accounts) => {
             university: "Ibn Tofail",
             student: student,
             dean: deanAddress,
-            montion: 2
+            montion: "passable"
         }
         const metadata = JSON.stringify(diploma);
         const hash = _web3.utils.sha3(metadata);
@@ -132,11 +132,12 @@ contract("Uit", (accounts) => {
             university: "Ibn Tofail",
             student: student,
             dean: deanAddress,
-            montion: 2
+            montion: "passable"
         }
         const metadata = JSON.stringify(diploma);
         const hash = _web3.utils.sha3(metadata);
         const signature = await _web3.eth.sign(hash, deanAddress);
+        console.log(signature)
         var result;
         try {
             result = await uitInstance.registerDiploma(diploma.title, diploma.university, diploma.student, diploma.montion, hash, signature, {from: deanAddress});
